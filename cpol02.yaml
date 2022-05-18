@@ -1,0 +1,22 @@
+apiVersion: kyverno.io/v1
+kind: ClusterPolicy
+metadata:
+  name: cpol02-require-labels
+spec:
+  validationFailureAction: enforce
+  background: true
+  rules:
+  - name: check-for-labels
+    match:
+      any:
+      - resources:
+          kinds:
+          - Pod
+          namespaces:
+          - production
+    validate:
+      message: "The label `app.kubernetes.io/dog` is required."
+      pattern:
+        metadata:
+          labels:
+            app.kubernetes.io/dog: "?*"
